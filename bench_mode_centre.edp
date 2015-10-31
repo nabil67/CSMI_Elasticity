@@ -1,0 +1,178 @@
+real h=0.1;
+real L=6;
+
+border a1(t=h/2, -h/2){ x=0; y=t; label=1;};  // gauche
+border a2(t=0, L){ x=t; y=-h/2; label=2;};    // bas
+border a3(t=-h/2, h/2){ x=L; y=t; label=3;};  // droite
+border a4(t=L, 0){ x=t; y=h/2; label=4;};     // haut
+
+int k=1;
+mesh Th = buildmesh( a1(k)+a2(30*k)+a3(k)+a4(30*k) );
+plot(Th, wait=1);
+
+real E=750000; // module Young
+real nu=0.3; // coefficient de Poisson
+real lambda=nu*E/((1.-2.*nu)*(1.+nu)); // coefficient de Lame
+real mu=E/(2.*(1.+nu));
+real rho=1.1; // masse volumique
+
+
+fespace Vh(Th,[P1,P1]);
+
+//Vh [u10,u20], [u10p,u20p];
+//[u10,u20]=[0,x*(L-x)/20];
+//[u10p,u20p]=[0,0];
+
+//border uinit(t=0, L){x=t; y=t*(L-t)/20;};
+//plot([u10,u20],wait=1,value=1);
+//mesh Th1=movemesh (Th,[x+u10,y+u20]);
+//plot(Th1,uinit(30),wait=1);
+
+
+Vh [u1h,u2h], [v1h,v2h];
+
+real sigma=0;
+
+varf a( [u1h,u2h], [v1h,v2h] )= 
+int2d(Th)( lambda*(dx(u1h)+dy(u2h))*(dx(v1h)+dy(v2h))
+          +2*mu*( dx(u1h)*dx(v1h)
+                  +0.5*(dx(u2h)+dy(u1h))*(dx(v2h)+dy(v1h))
+                  +dy(u2h)*dy(v2h)
+                )
+          )
++int2d(Th)( -sigma*(u1h*v1h + u2h*v2h ) )
++on(a1,a3,u1h=0,u2h=0);
+
+varf b( [u1h,u2h], [v1h,v2h] )=
+int2d(Th)( rho*(u1h*v1h + u2h*v2h) );
+
+matrix A=a(Vh,Vh,solver=Crout,factorize=1);
+matrix B=b(Vh,Vh,solver=CG,eps=1e-20);
+                           
+int nev=10;
+
+real[int] ev(nev);
+
+Vh[int] [vectp1,vectp2](nev);
+
+int nn=EigenValue(A,B,sym=true,sigma=sigma,value=ev,vector=vectp1,tol=1e-10);
+
+cout<< "nn=" << nn << endl;
+
+/*
+real norm;
+
+for( int i=0; i< nev; i++)
+{
+norm = int2d(Th)( rho*(vectp1[i]*vectp1[i] + vectp2[i]*vectp2[i]) );
+norm=sqrt(norm);
+cout << "norm=" << norm << endl;
+};
+*/
+
+
+/*
+real mag=0.1;
+
+for( int i=0; i< nev; i++)
+{
+  cout << "i=" << i << " ev=" << ev[i] << endl;
+  [u1h,u2h]=[mag*vectp1[i],mag*vectp2[i]];
+  plot([u1h,u2h],cmm="Eigen Vector "+i+" valeur =" + ev[i],wait=1,value=1);
+  mesh Th1=movemesh(Th,[x+u1h,y+u2h]);
+  plot(Th1,wait=1);
+}
+*/
+
+// calcul des q
+
+int m=10;
+real t;
+
+func f1=0;
+func f2=sin(2*pi*t)*x*(L-x)*(-4*pi^2)/9.
+       +sin(2*pi*t)*mu*2./9.;
+
+func F1=mu*sin(2*pi*t)*(L-2.*x)/9.;
+func F2=0;
+
+real[int] q(m), qp(m), qpp(m);
+
+real[int] alpha(m), alphap(m), alphapp(m);
+
+
+fespace Wh(Th,P1);
+Wh U1h,U2h;
+Wh u1,u2;
+
+real theta=0.4;
+real dt=0.01;
+int M=200;
+
+
+qp=0;  // a voir
+qpp=0; 
+
+
+ofstream cout1("err_bench_mode_centre_theta0.4.txt");
+real error;
+
+
+for( int n=1; n<M; n++)
+{
+
+t=(n)*dt;
+for( int i=0; i<m; i++)
+{
+alphap[i]=int2d(Th)( f1*vectp1[i] + f2*vectp2[i] )
+         +int1d(Th,a4)( F1*vectp1[i] + F2*vectp2[i] )
+         -int1d(Th,a2)( F1*vectp1[i] + F2*vectp2[i] );
+
+cout << "i=" << i << " alphap= "<< alphap[i] << endl;
+};
+
+
+
+for( int i=0; i<m; i++)
+{
+q[i]= ( 2 - ev[i]*(dt*dt)*(1-2*theta) )/(1+ev[i]*(dt*dt)*theta) * qp[i]
+     +(-1 - ev[i]*(dt*dt)*theta )/(1+ev[i]*(dt*dt)*theta) * qpp[i]
+     +(dt*dt)*(alphap[i])/(1+ev[i]*(dt*dt)*theta);
+
+cout << "i=" << i << " q= "<< q[i] << endl;
+};  
+
+
+                                               
+U1h=0;
+U2h=0;
+for( int i=0; i<m; i++)
+{
+  U1h = U1h + vectp1[i]*q[i];
+  U2h = U2h + vectp2[i]*q[i];
+};
+
+//plot([U1h,U2h],wait=1,value=1);
+mesh Th2=movemesh(Th,[x+U1h,y+U2h]);
+
+t=(n+1)*dt;
+plot(Th,Th2,wait=0, cmm="t="+t);
+
+
+t=(n+1)*dt;
+u1=0;
+u2=sin(2*pi*t)*x*(L-x)/9.;
+
+error=sqrt( int2d(Th)( (u1-U1h)^2 + (u2-U2h)^2 ) );
+cout1 << t <<" "<< error << endl;
+
+
+qpp=qp;
+qp=q;
+
+};
+
+
+                                 
+
+
