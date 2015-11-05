@@ -19,7 +19,7 @@
 %\useoutertheme[left]{sidebar}
 
 \title{Projet collaboratif : Pollen}
-\subtitle{Partie Élasticité linéaire}
+\subtitle{Partie Élasticité linéaire dans un domaine axisymétrique}
 \author{Nabil Belahrach \& Alexandre Corizzi}
 \date{Novembre 2015}
 \institute{Université de Strasbourg -- U.F.R. de Mathèmatiques
@@ -110,7 +110,7 @@ et d'Informatique}
 \subsection{Principaux acteurs}
 \begin{frame}{Déplacement et déformation}
   \begin{itemize}
-    \item Vecteurs de deplacement (inconnus) : $\vec{u} \in \mathbb{R}^3 $
+    \item Vecteur de déplacement : $\vec{u}=(u_1,u_2,u_3) \in \mathbb{R}^3 $
   \end{itemize}
   \pause
   \vspace{2pt}
@@ -119,12 +119,12 @@ et d'Informatique}
     \nabla u =  
     \left(
     \begin{array}{ccc}
-      \frac{\partial u_x}{\partial x } & \frac{\partial u_x}{\partial y } & 
-      \frac{\partial u_x}{\partial z }  \\
-      \frac{\partial u_y}{\partial x } & \frac{\partial u_y}{\partial y } & 
-      \frac{\partial u_y}{\partial z }  \\
-      \frac{\partial u_z}{\partial x } & \frac{\partial u_z}{\partial y } & 
-      \frac{\partial u_z}{\partial z } 
+      \frac{\partial u_1}{\partial x } & \frac{\partial u_1}{\partial y } & 
+      \frac{\partial u_1}{\partial z }  \\
+      \frac{\partial u_2}{\partial x } & \frac{\partial u_2}{\partial y } & 
+      \frac{\partial u_2}{\partial z }  \\
+      \frac{\partial u_3}{\partial x } & \frac{\partial u_3}{\partial y } & 
+      \frac{\partial u_3}{\partial z } 
     \end{array}
     \right)
   \end{equation}
@@ -152,7 +152,7 @@ et d'Informatique}
   \end{equation}
   \begin{itemize}
       \pause
-    \item $\lambda$ et $\mu$ sont les coéffiscients de Lamé du matériau. \\
+    \item $\lambda$ et $\mu$ sont les coefficients de Lamé du matériau. \\
       \pause
       $\mu$ est la résistance au cisaillement 
       \pause
@@ -164,20 +164,31 @@ et d'Informatique}
 
 \subsection{Problème aux Valeurs Propres} 
 \begin{frame}{Problème aux Valeurs Propres} 
-  \begin{equation*}
-    - \mathbf{div}  \left( \sigma \left(\vec{u}\right) \right) = \vec{\mathbf{F}}_{ext}
-  \end{equation*}
+  \begin{itemize}
+     \item Élasticité aux valeurs propres:
+  \end{itemize}
+  
+%  \begin{equation*}
+%    - \mathbf{div}  \left( \sigma \left(\vec{u}\right) \right) = \vec{\mathbf{F}}_{ext}
+%  \end{equation*}
 
   \begin{equation}
-   - \mathbf{div}  \left( \sigma \left(\vec{u}\right) \right) = \lambda \cdot \vec{u}
+   - \mathbf{div}  \left( \sigma \left(\vec{u}\right) \right) = \lambda_u \cdot \vec{u}
   \end{equation}
+    \begin{itemize}
+     \item Avec les conditions aux bords suivantes:
+  \end{itemize}
+
+\[u_i = u_{0i} \quad \text{sur} \quad \Gamma_1 \text{,} \]
+\[\sum_{j=1}^3 \sigma_{ij} n_j  = g_i \quad \text{sur} \quad \Gamma_2 \text{.}\]
+  
 \end{frame}
 
 \subsection{Formulation faible}
 \begin{frame}
   \begin{equation}
     - \int_\Omega \mathbf{div}  \left( \sigma \left(u\right) \right) v \hspace{7pt} \diff \Omega 
-    = \int_\Omega \lambda \hspace{2pt} u v \hspace{7pt} \diff \Omega
+    = \lambda_u\int_\Omega  \hspace{2pt} u v \hspace{7pt} \diff \Omega
   \end{equation}
   \pause
   On a d'abord :
@@ -191,69 +202,161 @@ et d'Informatique}
   \begin{equation}
     ^{\mathrm{GREEN}}\Leftrightarrow
       \int_\Omega \sum_{j=1}^3 \sigma_{i,j} \frac{\partial v_i}{\partial x_j} \diff \Omega 
-      \underbrace{- \int_\Gamma \sum_{j=1}^3 \left(\sigma_{i,j}, \vec{\mathbf{n}} \right) v_i \hspace{7pt} 
-       \diff \Gamma}_{\mathrm{BC}}
-    = \int_\Omega \lambda_i \hspace{2pt} u_i v_i \hspace{7pt} \diff \Omega
+      \underbrace{- \int_{\Gamma_{2}} \sum_{j=1}^3 \left(\sigma_{i,j}, \vec{\mathbf{n}} \right) v_i \hspace{7pt} 
+       \diff {\Gamma_{2}}}_{\mathrm{BC}}
+    = \lambda_u \int_\Omega  \hspace{2pt} u_i v_i \hspace{7pt} \diff \Omega
   \end{equation}
-  \end{frame}
+ \end{frame}
+%---------------------------------------------------------------------
+\begin{frame}
+ \begin{itemize}
+ \item conformément à La condition limite sur $\Gamma_{2}$
+
+$$\int_{\Omega}\sum_{j=1}^{3}\sigma_{ij}\frac{\partial v_{i}}{\partial x_{j}} - \int_{\Gamma_{2}}g_{j}v_{i}  = \lambda_u\int_{\Omega} u_{i}v_{i},\hspace{0.2cm} pour : 1\leq i \leq 3$$ 
+     \end{itemize}
+
+\end{frame}
+%-----------------------------------------------------------------------
+\begin{frame}
+    \begin{itemize}
+    \item En détails : \\
+    \end{itemize}
+\begin{tiny}
 
 
+ \begin{eqnarray}
+\int_{\Omega} \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_1}{\partial x_1}\right] \frac{\partial v_1}{\partial x_1} + \mu \left(\frac{\partial u_1}{\partial x_2} + \frac{\partial u_2}{\partial x_1}\right)\frac{\partial v_1}{\partial x_2} + \mu \left(\frac{\partial u_1}{\partial x_3} + \frac{\partial u_3}{\partial x_1}\right)\frac{\partial v_1}{\partial x_3}
+- \int_{\Gamma_2} g_1 v_1 = \lambda_u\int_{\Omega}u_1\ v_1,\nonumber\\
+\int_{\Omega} \mu \left(\frac{\partial u_1}{\partial x_2} + \frac{\partial u_2}{\partial x_1}\right)\frac{\partial v_2}{\partial x_1} + \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_2}{\partial x_2}\right] \frac{\partial v_2}{\partial x_2} + \mu \left(\frac{\partial u_2}{\partial x_3} + \frac{\partial u_3}{\partial x_2}\right)\frac{\partial v_2}{\partial x_3}
+- \int_{\Gamma_2} g_2 v_2 = \lambda_u\int_{\Omega}u_2\ v_2,\\
+\int_{\Omega} \mu \left(\frac{\partial u_1}{\partial x_3} + \frac{\partial u_3}{\partial x_1}\right)\frac{\partial v_3}{\partial x_1} + \mu \left(\frac{\partial u_2}{\partial x_3} + \frac{\partial u_3}{\partial x_2}\right)\frac{\partial v_3}{\partial x_2}  + \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_3}{\partial x_3}\right] \frac{\partial v_3}{\partial x_3}
+- \int_{\Gamma_2} g_3 v_3 = \lambda_u\int_{\Omega}u_3\ v_3.\nonumber
+  \end{eqnarray}    
+\end{tiny}
+
+
+\end{frame}
+%------------------------------------------------------------------------
 \subsection{Changement de variables} 
 \begin{frame}{Coordonnées cylindriques}
   \begin{minipage}{0.48\textwidth}
-    \begin{equation*}
-      \left \{
-	\begin{array}{ccc}
-	  x & = &r \cos \theta  \\
-	  y & = &r \sin \theta   \\
-	  z & = &z \\
-	\end{array}
-	\right.
-      \end{equation*}
-    \end{minipage}
-    \hspace*{\stretch{1}}
-    \begin{minipage}{0.48\textwidth}
+  
+   \begin{itemize}
+       \item Coordonnées cylindriques: \\
+    \end{itemize}
+$$g(x_1, x_2, x_3) = g(x_1(r, \phi), x_2(r, \phi), x_3(z))$$  
+
       \begin{equation}
 	\left \{
 	  \begin{array}{ccc}
-	    u_x & = &u_r \cos \theta  \\
-	    u_y & = &u_r \sin \theta   \\
-	    u_z & = &u_z \\
+	    x_1(r, \phi) &=& r \cos \phi  \\
+	    x_2(r, \phi) & = & r \cos \phi   \\
+	    x_3(z) & = & z \\
 	  \end{array}
 	  \right.
 	\end{equation}
+	
+%    \begin{equation*}
+%      \left \{
+%	\begin{array}{ccc}
+%	  x & = &r \cos \theta  \\
+%	  y & = &r \sin \theta   \\
+%	  z & = &z \\
+%	\end{array}
+%	\right.
+%      \end{equation*}
+    \end{minipage}
+    \hspace*{\stretch{1}}
+    \begin{minipage}{0.48\textwidth}
+   
       \end{minipage}
       \pause
     \vspace{23pt}
-  \begin{equation}
-    J  =  
-    \left(
-    \begin{array}{ccc}
-         \cos \theta &  \sin \theta & 0 \\
-      -r \sin \theta &r \cos \theta & 0 \\
-                          0 & 0 & 1 \\
-    \end{array}
-    \right)
-  \end{equation}
+
 \end{frame}
 
-\begin{frame}{Transformation inverse pour le changement de variable}
-\begin{equation}
-    \left \{
-      \begin{array}{rcl}
-	\frac{\partial g}{\partial x} & = & \frac{\partial g}{\partial r} 
-	\cos \theta - \frac{1}{r} \frac{\partial{g}}{\partial \theta} \sin \theta 
-	\vspace{10pt} \\
-	\frac{\partial g}{\partial y} & = & \frac{\partial g}{\partial r} 
-	\sin \theta + \frac{1}{r} \frac{\partial{g}}{\partial \theta} \cos \theta
-	\vspace{10pt} \\
-	\frac{\partial g}{\partial z} & = & \frac{\partial g}{\partial z}\\
-      \end{array}
-      \right.
-    \end{equation}
-\end{frame}
+\begin{frame}
+
+\begin{itemize}
+  \item Les dérivées:
+\end{itemize}
+
+      \begin{equation}
+	\left \{
+	  \begin{array}{ccc}
+\frac{\partial g}{\partial r} &=& \frac{\partial g}{\partial x_1}\cos\phi +  \frac{\partial g}{\partial x_2}\sin\phi \\
+\frac{\partial g}{\partial \phi} &=& \frac{\partial g}{\partial x_1}(-r\sin\phi) +  \frac{\partial g}{\partial x_2}r\cos\phi\\
+\frac{\partial g}{\partial z} &=& \frac{\partial g}{\partial x_3}
+	  \end{array}
+	  \right.
+	\end{equation}
+	
+\pause 
+\begin{itemize}
+  \item De là, nous obtenons
+\end{itemize}
+
+	
+      \begin{equation}
+	\left \{
+	  \begin{array}{ccc}
+
+\frac{\partial g}{\partial x_1} &=& \frac{\partial g}{\partial r}\cos\phi - \frac{1}{r}\frac{\partial g}{\partial \phi}\sin\phi,\nonumber \\
+\frac{\partial g}{\partial x_2} &=& \frac{\partial g}{\partial r}\sin\phi + \frac{1}{r}\frac{\partial g}{\partial \phi}\cos\phi, \\
+\frac{\partial g}{\partial x_3} &=& \frac{\partial g}{\partial z}. \nonumber
+	  \end{array}
+	  \right.
+	\end{equation}
+\end{frame}	
+
 
 % ------------------------------------------------------------------------------
+
+\begin{frame} 
+
+\begin{itemize}
+  \item De manière analogue:
+
+
+	
+      \begin{equation*}
+	\left \{
+	  \begin{array}{ccc}
+\frac{\partial u_1}{\partial x_1} &=& \frac{\partial u_r}{\partial r}\cos^2\phi + \frac{1}{r} u_r\sin^2\phi,\nonumber \\
+\frac{\partial u_1}{\partial x_2} &=& \frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi, \nonumber \\
+\frac{\partial u_1}{\partial x_3} &=&\frac{\partial u_r}{\partial z}\cos\phi. \nonumber
+	  \end{array}
+	  \right.
+	\end{equation*}
+	
+\pause
+ \item De même pour $u_2$:
+      \begin{equation*}
+	\left \{
+	  \begin{array}{ccc}
+
+\frac{\partial u_2}{\partial x_1} &=& \frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi \\
+\frac{\partial u_2}{\partial x_2} &=& \frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi \\
+\frac{\partial u_2}{\partial x_3} &=& \frac{\partial u_r}{\partial z}\sin\phi
+	  \end{array}
+	  \right.
+	\end{equation*}
+
+	
+  \end{itemize}
+\end{frame}	
+
+%--------------------------------------------------------------------------------
+
+\begin{frame}
+  \begin{itemize}
+  
+  
+
+  \end{itemize}
+\end{frame}
+
+%-------------------------------------------------------------------------------
   \section{Éxpérimentation}
   \begin{frame}
     \vfill
