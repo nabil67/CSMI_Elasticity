@@ -350,13 +350,104 @@ $$g(x_1, x_2, x_3) = g(x_1(r, \phi), x_2(r, \phi), x_3(z))$$
 
 \begin{frame}
   \begin{itemize}
-  
-  
-
+ \item Et finalement $u_3$
+ 
+       \begin{equation*}
+	\left \{
+	  \begin{array}{ccc}	  
+\frac{\partial u_3}{\partial x_1} &=& \frac{\partial u_z}{\partial r}\cos\phi, \nonumber \\
+\frac{\partial u_3}{\partial x_2} &=& \frac{\partial u_z}{\partial r}\sin\phi,\nonumber \\
+\frac{\partial u_3}{\partial x_3} &=& \frac{\partial u_z}{\partial z}. \nonumber
+	  \end{array}
+	  \right.
+	\end{equation*}
   \end{itemize}
 \end{frame}
 
 %-------------------------------------------------------------------------------
+\begin{frame}
+ \begin{itemize}
+ 
+   \item  Nous pouvons commencer à transformer les intégrales:
+   
+   \begin{tiny}
+   
+   
+   \begin{eqnarray*} \int_{\Omega} r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) + 2 \mu (\frac{\partial u_r}{\partial r}\cos^2\phi + \frac{1}{r} u_r\sin^2\phi)\right] (\frac{\partial v_r}{\partial r}\cos^2\phi + \frac{1}{r} v_r\sin^2\phi) + \\ r 2 \mu \left(\frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi\right)\left(\frac{\partial v_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}v_r \cos\phi\sin\phi\right) + \\ r \mu \left(\frac{\partial u_r}{\partial z}\cos\phi + \frac{\partial u_z}{\partial r}\cos\phi\right)\frac{\partial v_r}{\partial z}\cos\phi - \int_{\Gamma_2} r g_r v_r {\cos}^2 \phi = \lambda_u \int_{\Omega} r u_r\ v_r \cos^2 \phi, \end{eqnarray*}
+   
+   
+   \end{tiny}
+ \end{itemize}
+
+
+\end{frame}
+
+
+%-------------------------------------------------------------------------------
+\begin{frame}
+
+ \begin{itemize}
+   \item La deuxième:
+ \end{itemize}
+
+\begin{tiny}
+\begin{eqnarray*} 
+\int_{\Omega} r 2\mu \left(\frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi\right)\left(\frac{\partial v_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}v_r \cos\phi\sin\phi\right) +\\  r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) + 2 \mu (\frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi)\right] (\frac{\partial v_r}{\partial r}\sin^2\phi + \frac{1}{r} v_r\cos^2\phi) + \\  r \mu \left(\frac{\partial u_r}{\partial z}\sin\phi + \frac{\partial u_z}{\partial r}\sin\phi\right)(\frac{\partial v_r}{\partial z}\sin\phi)  - \int_{\Gamma_2}r g_r v_r \sin^2 \phi =\lambda_u \int_{\Omega}r u_r\ v_r \sin^2 \phi,\\ \end{eqnarray*} 
+\end{tiny}
+
+\end{frame}
+
+%-------------------------------------------------------------------------------
+\begin{frame}
+
+ \begin{itemize}
+   \item  On additionnes les deux formulations faibles.
+   \item  Et pour simplifier $\phi = 0$. 
+   \item $\Omega_0 = \Omega \cap $ \{\ le demi plan ${x_1}^{+} x_3$\}\ \\
+  \end{itemize}
+\pause
+   \begin{tiny}
+$$\int_{\Omega_0} r \lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) (\frac{\partial v_r}{\partial r} + \frac{1}{r} v_r) + \int_{\Omega_0} r \mu \left[ 2 \left(\frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r} + \frac{1}{r^2} u_r v_r\right) +  \left(\frac{\partial u_r}{\partial z}\frac{\partial v_r}{\partial z} + \frac{\partial u_z}{\partial r}\frac{\partial v_r}{\partial z}\right)\right]$$ \\
+$$ - \int_{\Gamma_2} g_r v_r r = \lambda_u \int_{\Omega_0} u_r\ v_r r $$ \\ 
+
+   \end{tiny}
+\end{frame}
+%-----------------------------------------------------------------------------
+
+\begin{frame}
+
+ \begin{itemize}
+   \item  Et enfin la formulation faible suivant $\vec {oz}$:
+  \end{itemize}
+
+   \begin{tiny}
+$$\int_{\Omega_0} r \mu (\frac{\partial u_{r}}{\partial z}\frac{\partial v_{z}}{\partial r} + \frac{\partial u_{z}}{\partial r}\frac{\partial v_{z}}{\partial r} + 2 
+\frac{\partial u_{z}}{\partial z}\frac{\partial v_{z}}{\partial z}) +
+r\mu(\frac{\partial u_{r}}{\partial r}+ \frac{1}{r} u_{r} + \frac{\partial u_{z}}{\partial z}) \frac{\partial v_{z}}{\partial z}
+-\int_{\Gamma_{2}} g_{z}v_{z}r  
+= \lambda_u \int_{\Omega_0} u_{z}v_{z}r$$
+   \end{tiny}
+
+\end{frame}
+
+
+
+
+% \begin{itemize}
+% 
+%   \item  Le deuxième intégrale: 
+%   
+%   \begin{tiny}
+%   
+%   
+%\begin{eqnarray} \int_{\Omega} r 2\mu \left(\frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi\right)\left(\frac{\partial v_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}v_r \cos\phi\sin\phi\right) +\\  r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) + 2 \mu (\frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi)\right] (\frac{\partial v_r}{\partial r}\sin^2\phi + \frac{1}{r} v_r\cos^2\phi) + \\  r \mu \left(\frac{\partial u_r}{\partial z}\sin\phi + \frac{\partial u_z}{\partial r}\sin\phi\right)(\frac{\partial v_r}{\partial z}\sin\phi)  - \int_{\Gamma_2}r g_r v_r \sin^2 \phi = \lambda_u \int_{\Omega}r u_r\ v_r \sin^2 \phi,\\ \end{eqnarray}
+%     
+%   \end{tiny}
+% \end{itemize}
+%
+%
+%\end{frame}
+%%-------------------------------------------------------------------------------
   \section{Éxpérimentation}
   \begin{frame}
     \vfill
@@ -369,7 +460,7 @@ $$g(x_1, x_2, x_3) = g(x_1(r, \phi), x_2(r, \phi), x_3(z))$$
 % ------------------------------------------------------------------------------
 
   \begin{frame}{Code FreeFem++}
+
   \end{frame}
 
-  \end{document}
-
+\end{document}
