@@ -1,0 +1,435 @@
+\documentclass[a4paper,11pt]{article}   % Article
+%\documentclass[12pt,a4paper,twoside]{article}
+\addtolength{\textheight}{90pt} \addtolength{\topmargin}{-60pt}
+\textwidth 164mm \oddsidemargin -2.25mm \evensidemargin -2.25 mm
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{epic,url}
+\usepackage{color}
+\usepackage{xcolor}   
+\usepackage[colorlinks]{hyperref}
+% \usepackage{epsfig}
+% \usepackage{epstopdf}
+\usepackage{graphicx}
+\setcounter{tocdepth}{3}
+\usepackage{listings}
+\usepackage{framed}
+%\usepackage{caption}
+%\usepackage{subcaption}
+%\usepackage{subfigure}
+\usepackage{pgfplots, pgfplotstable}
+\usepackage{multicol}
+\definecolor{lbcolor}{rgb}{0.95,0.95,0.95}
+
+\lstset{
+  language        = Python,
+  texcl           = true,
+  mathescape      = true,
+  basicstyle      = \tt,
+  keywordstyle    = \bf\color{red!50},
+  commentstyle    = \it\tt\color{blue},
+  stringstyle     = \color{black!50},
+  morekeywords    = {border, buildmesh},
+  %stringstyle=\color{blue}
+  frame={top,bottom},
+  backgroundcolor=\color{lbcolor},
+  }
+%\lstset{language=Python, 
+%        basicstyle=\ttfamily\small, 
+%        keywordstyle=\color{keywords},
+%        commentstyle=\color{comments},
+%        stringstyle=\color{red},
+%        showstringspaces=false,
+%        identifierstyle=\color{pink},
+%        procnamekeys={def,class}}
+
+%======================================================================%
+%                          Début du document                           %
+%======================================================================%
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%premiere page%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\thispagestyle{empty}
+ \vspace{-10mm}
+%\Ovalbox{
+   \begin{minipage}[c][150pt][c]{.40\linewidth} %[hauteur][position]{largeur}
+	{\normalsize 
+		\begin{flushleft}
+		\vspace{3mm}
+	      	POLLEN\\
+		pollen-multimedia\\
+		\url{http://www.pollen-multimedia.com}\\
+		\vspace{2mm}
+		\includegraphics[scale=0.6]{Images/pollen.jpg} 
+		\vspace{3mm}
+		\end{flushleft}
+	}
+   \end{minipage}
+\hfill
+\hspace{15mm}
+%
+%\Ovalbox{
+   \begin{minipage}[c][150pt][c]{.50\linewidth} %[hauteur][position]{largeur}
+	{\normalsize 
+		\begin{flushright}
+		\vspace{3mm}
+			      	CEMOSIS\\
+		Centre de Modélisation \\
+		et de Simulation de Strasbourg\\
+		\url{http://www.cemosis.fr}\\
+		\vspace{2mm}
+		\includegraphics[scale=0.8]{Images/cemosis.png} 
+		\vspace{3mm}
+		\end{flushright}
+	}
+   \end{minipage}
+%}
+\vfill
+\vspace{25mm}
+
+    \hspace{3.5cm}   
+   {\Huge \textsc{Mini Projet LNCMI\\}} \\
+    \vspace{1mm}
+%\Ovalbox{
+\rule{\linewidth}{0.8mm}\\
+     
+    \begin{minipage}[c]{0.90\linewidth} %[hauteur][position]{largeur}
+     \vspace{1mm}
+	{\Huge	  
+	   Etude du problème d'élasticité aux valeurs propres.
+	}\\
+	\vspace{1mm}
+   \end{minipage}
+    \\
+\rule{\linewidth}{0.8mm}\vspace{6mm}\\
+%}
+%
+%\vspace{7cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% responsable  %%%%%%%%%%%%%%
+\vfill
+\vspace{3cm}
+   \begin{minipage}[c]{.46\linewidth}
+	{\normalsize 
+		\begin{flushleft}
+		\vspace{2mm}		 
+		\textsc{Alexandre CORIZZI}\\
+		\textsc{Nabil BELAHRACH}\\
+		
+		\vspace{0.5cm}        
+	    %  	Tuteurs:\\
+		%\vspace{2mm}
+		%\textsc{}\\
+		%\textsc{}\\
+	    %\textsc{}
+		\end{flushleft}
+	}
+   \end{minipage}
+\hfill
+\hspace{15mm}
+   \begin{minipage}[c]{.46\linewidth}
+	{\normalsize 
+		\begin{flushright}
+		%\vspace{0.5cm}
+		%Responsable de la formation:\\
+
+		%\textsc{Christophe Prud'Homme}
+		\end{flushright}
+	}
+   \end{minipage}
+   
+ 
+
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  debut  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Introduction}
+
+
+  \section{Elasticité}
+
+
+  \subsection{Modèle de l'élasticité}
+
+ Dans notre modèle l'inconnue est donnée par les couples $(u,\lambda _u)$ \\
+ $u$  représente le déplacement observé lors de la déformation.
+ $\lambda_u$ : la valeur propre associée au vecteur propre u.
+ Les paramètres $\lambda$ et $\mu$ sont appelés les coefficients de Lamé.
+ Ils ont pour unité le  $Pa (N/m^2)$.
+ Ils sont définis comme suit: 
+\begin{equation}
+\label{lame}
+ \lambda=\frac{Ev}{(1+2v)(1+v)}  \text{,} \quad \mu=\frac{E}{2(1+v)} 
+ \end{equation}.
+
+Où $E$ est le module de Young, il relie contrainte et traction.
+En effet il représente la rigidité du materiau.
+Et $v$ est le coefficient de Poisson.
+Il détermine l'incompressibilité du materiau (un materiau de coefficient égal à 0.5 est parfaitement incompressible).
+
+Pour une légère déformation, le tenseur $\varepsilon$ est:
+\begin{equation}
+\label{deform}
+\varepsilon_{ij} =\frac{1}{2}(\frac{\partial u_i}{\partial x_j}+\frac{\partial u_j}{\partial x_i}) \quad \text{,} \quad 1\leq i,j \leq 3
+\end{equation}
+Et le tenseur des contraintes $\sigma$ est:
+\begin{equation}
+\label{contrainte}
+\sigma_{ij}=\lambda \delta_{ij} div(u) +2\mu \varepsilon_{ij} \quad \text{,} \quad 1\leq i,j \leq 3
+\end{equation}
+Comme, \[ div (u)= \sum_{k=1}^3 \frac{\partial u_k}{\partial x_k} \]
+On a: \[ div(u) = \sum_{k=1}^3 \varepsilon_{kk}  =Tr(\varepsilon) \]
+En posant $u=(u_1,u_2,u_3)^T$,
+on a, à l'équilibre des forces:
+\begin{equation}
+\label{model}
+\sum_{j=1}^3 \frac{\partial \sigma_{ij}}{\partial x_j}  + f_i = \lambda _u u_i \quad \text{,} \quad 1\leq i \leq3
+\end{equation}
+
+Avec les conditions aux bords suivantes:
+
+\[u_i = u_{0i} \quad \text{sur} \quad \Gamma_1 \text{,} \]
+\[\sum_{j=1}^3 \sigma_{ij}\nu_j  = g_i \quad \text{sur} \quad \Gamma_2 \text{.}\]
+
+%On note $ \frac{\partial u_i}{\partial x_j}=u_{i,j}$ ,on peut alors réécrire l'équation d'équilibre comme suit:
+%\begin{equation}
+%\label{modeleR}
+%(\lambda+\mu)\sum_{k=1}^3 u_{k,ki}+\mu \sum_{k=1}^3 u_{i,kk} +\sum_{k=1}^3 f_k =0 \quad \text{,} \quad  1\leq i \leq 3
+%\end{equation}
+%Symboliquement, on a:
+%\begin{equation}
+%\label{modeleS}
+%(\lambda+\mu) \textbf{grad} \  div \ \textbf{u} +\mu \Delta \textbf{u} +\textbf{F}=0
+%\end{equation}
+%
+%Cet élasticité linéaire est écrit en coordonnées cartésiennes,
+%on va d'abord faire la formulation variationnelle puis reporter la formulation en coordonnées cylindriques.
+%
+%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   page 3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+\section{Formulation variationelle}
+La formulation variationnelle de $(P)$ est obtenue par intégration par parties. Elle s’écrit
+
+
+$$-\int_{\Omega} \sum_{i=1}^{3} \frac{\partial \sigma_{ij}}{\partial x_{i}} v_{i} = \lambda _u \int_{\Omega} u_{i} v_{i},\hspace{0.2cm} pour : 1 \leq i \leq 3$$ 
+
+l'utilisation de la formule de Green nous montre que :\\
+
+$$\int_{\Omega} \sum_{j=1}^{3} \sigma_{ij} \frac{\partial v_{i}}{\partial x_{j}} - \int_{\partial \Omega} \sum_{j=1}^{3}\sigma_{ij}n_{j}v_{i}  = \lambda _u \int_{\Omega} u_{i}v_{i} \text{,pour} :\hspace{0.2cm} 1 \leq i \leq 3$$ 
+
+alors, conformément à la condition limite sur $\Gamma_{2}$
+
+$$\int_{\Omega}\sum_{j=1}^{3}\sigma_{ij}\frac{\partial v_{i}}{\partial x_{j}} - \int_{\Gamma_{2}}g_{j}v_{i}  =\lambda _u \int_{\Omega}u_{i}v_{i},\hspace{0.2cm} pour : 1\leq i \leq 3$$ 
+
+
+
+En plus de détails : \\
+
+\begin{eqnarray*}
+\int_{\Omega} \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_1}{\partial x_1}\right] \frac{\partial v_1}{\partial x_1} + \mu \left(\frac{\partial u_1}{\partial x_2} + \frac{\partial u_2}{\partial x_1}\right)\frac{\partial v_1}{\partial x_2} + \mu \left(\frac{\partial u_1}{\partial x_3} + \frac{\partial u_3}{\partial x_1}\right)\frac{\partial v_1}{\partial x_3}
+- \int_{\Gamma_2} g_1 v_1 =\lambda _u \int_{\Omega}u_1\ v_1,\nonumber\\
+\int_{\Omega} \mu \left(\frac{\partial u_1}{\partial x_2} + \frac{\partial u_2}{\partial x_1}\right)\frac{\partial v_2}{\partial x_1} + \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_2}{\partial x_2}\right] \frac{\partial v_2}{\partial x_2} + \mu \left(\frac{\partial u_2}{\partial x_3} + \frac{\partial u_3}{\partial x_2}\right)\frac{\partial v_2}{\partial x_3}
+- \int_{\Gamma_2} g_2 v_2 =\lambda _u \int_{\Omega}u_2\ v_2,\\
+\int_{\Omega} \mu \left(\frac{\partial u_1}{\partial x_3} + \frac{\partial u_3}{\partial x_1}\right)\frac{\partial v_3}{\partial x_1} + \mu \left(\frac{\partial u_2}{\partial x_3} + \frac{\partial u_3}{\partial x_2}\right)\frac{\partial v_3}{\partial x_2}  + \left[\lambda \mbox{div}u + 2 \mu \frac{\partial u_3}{\partial x_3}\right] \frac{\partial v_3}{\partial x_3}
+- \int_{\Gamma_2} g_3 v_3 =\lambda _u \int_{\Omega}u_3\ v_3.\nonumber
+\end{eqnarray*}             
+
+Maintenant, on procède à un changement de variables pour passer aux coordonnées cylindriques: \\
+$$ \ \ \ g(x_1, x_2, x_3) = g(x_1(r, \phi), x_2(r, \phi), x_3(z))$$  \\
+$$x_1(r, \phi) = r \cos \phi, \ \ \ x_2(r, \phi) = r \sin \phi, \ \ \ x_3(z) = z $$
+
+
+De la même façon: $ \ \ \ 
+u_1 = u_r \cos \phi \ \ \
+u_2 = u_r \sin \phi \ \ \
+u_3 = u_z. $
+
+on calcul les dérivées:\\
+\begin{itemize}
+\item[•] de $u_1 :$
+\end{itemize}
+
+
+$ \frac{\partial u_1}{\partial x_1}=\frac{\partial u_1}{\partial r}\cos\phi - \frac{1}{r}\frac{\partial u_1} {\partial \phi}\sin\phi,\ \ \ $
+ $ \frac{\partial u_1}{\partial x_2} = \frac{\partial u_1}{\partial r}\sin\phi + \frac{1}{r}\frac{\partial u_1}{\partial \phi}\cos\phi,  \ \ \ $
+ $ \frac{\partial u_1}{\partial x_3} = \frac{\partial u_1}{\partial z}. $ \\
+
+\begin{itemize}
+\item[•] de $u_2 :$ 
+\end{itemize}
+
+
+$\frac{\partial u_2}{\partial x_1} = \frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi, \ \ \ $
+$\frac{\partial u_2}{\partial x_2} = \frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi, \ \ \ $
+$ \frac{\partial u_2}{\partial x_3} = \frac{\partial u_r}{\partial z}\sin\phi.$ \\
+
+\begin{itemize}
+\item[•] de $u_3 :$ 
+\end{itemize}
+
+$ \frac{\partial u_3}{\partial x_1} = \frac{\partial u_z}{\partial r}\cos\phi;  \  \ \ $
+$ \frac{\partial u_3}{\partial x_2} = \frac{\partial u_z}{\partial r}\sin\phi ;\ \ \ $
+$\frac{\partial u_3}{\partial x_3} = \frac{\partial u_z}{\partial z}. $ \\
+
+On transforme également $\mbox{div} u$ en coordonnées cylindriques: \\
+
+\begin{eqnarray*}
+ \mbox{div}u &=& \frac{\partial u_1}{\partial x_1} + \frac{\partial u_2}{\partial x_2} + \frac{\partial u_3}{\partial x_3} \\ &=& \frac{\partial u_r}{\partial r}\cos^2\phi + \frac{1}{r} u_r\sin^2\phi + \frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi + \frac{\partial u_z}{\partial z}  \\ &=& \frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}
+\end{eqnarray*} 
+ 
+\paragraph*{formulation axisymétrique}:\\
+Notre domaine $\Omega$ est de révolution (il s'agit d'un cylindre), on réécrit les intégrales précédents en coordonnées cylindriques. \\
+
+
+
+On sait que la matrice jaconbienne de cette transformation :\\
+$$J(r,\theta,z)=\begin{pmatrix}
+   cos(\theta) & -rsin(\theta) & 0\\
+   sin(\theta) & rcos(\theta) & 0 \\
+   0           & 0           & 1  \\  
+\end{pmatrix}$$
+le tenseur métrique du système de coordonnées cartésiennes $X=(x_1,x_2,x_3)$ est la matrice identité $\bar{g}_{xyz}=diag(1,1,1)$, donc par transformation nous obtenons le tenseur métrique $g_{r\theta z}$ dans la nouvelle base de coordonnées cylindriques :\\
+$$ g_{r\theta z} =   J^{t} \bar{g}_{xyz} J  $$
+$$ g_{r\theta z} =  \begin{pmatrix}
+                     1 &     0     & 0\\
+                     0 & \frac{1}{r^{2}} & 0 \\
+                     0           & 0           & 1  \\  
+                    \end{pmatrix}   $$
+et $$ {g^{-1}}_{r\theta z} =  \begin{pmatrix}
+                     1 &     0     & 0\\
+                     0 & r^{2} & 0 \\
+                     0           & 0           & 1  \\  
+                    \end{pmatrix}   $$
+
+
+La première équation devient : \\
+\begin{eqnarray*}
+ \int_{\Omega} r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) + 2 \mu (\frac{\partial u_r}{\partial r}\cos^2\phi + \frac{1}{r} u_r\sin^2\phi)\right] (\frac{\partial v_r}{\partial r}\cos^2\phi + \frac{1}{r} v_r\sin^2\phi) +  \\
+  2 r  \mu \left(\frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi\right)\left(\frac{\partial v_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}v_r \cos\phi\sin\phi\right) +  \\
+   r \mu \left(\frac{\partial u_r}{\partial z}\cos\phi + \frac{\partial u_z}{\partial r}\cos\phi\right)\frac{\partial v_r}{\partial z}\cos\phi - \int_{\Gamma_2} r g_r v_r {\cos}^2 \phi = \lambda _u \int_{\Omega} r u_r\ v_r \cos^2 \phi 
+\end{eqnarray*} \\
+
+La deuxième :\\
+\begin{eqnarray*} 
+\int_{\Omega} r 2\mu \left(\frac{\partial u_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}u_r \cos\phi\sin\phi\right)\left(\frac{\partial v_r}{\partial r}\cos\phi\sin\phi - \frac{1}{r}v_r \cos\phi\sin\phi\right) +\\  r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) + 2 \mu (\frac{\partial u_r}{\partial r}\sin^2\phi + \frac{1}{r} u_r\cos^2\phi)\right] (\frac{\partial v_r}{\partial r}\sin^2\phi + \frac{1}{r} v_r\cos^2\phi) + \\  r \mu \left(\frac{\partial u_r}{\partial z}\sin\phi + \frac{\partial u_z}{\partial r}\sin\phi\right)(\frac{\partial v_r}{\partial z}\sin\phi)  - \int_{\Gamma_2}r g_r v_r \sin^2 \phi =\lambda _u \int_{\Omega}r u_r\ v_r \sin^2 \phi,\\ \end{eqnarray*} 
+
+On additionne les deux égalités :\\
+\begin{eqnarray*} 
+\int_{\Omega} r \lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) (\frac{\partial v_r}{\partial r} + \frac{1}{r} v_r) +                                    \\
+ \int_{\Omega} r \mu \left[ 2 \left(\frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r}\cos^4\phi + \frac{1}{r} u_r \frac{\partial v_r}{\partial r}\sin^2 \phi \cos^2 \phi + \frac{1}{r}\frac{\partial u_r}{\partial r} v_r\sin^2 \phi \cos^2 \phi + \frac{1}{r^2} u_r v_r\sin^4\phi\right) +\right.\\ \qquad\ \left.2 \left(\frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r}\sin^4\phi + \frac{1}{r} u_r \frac{\partial v_r}{\partial r}\sin^2 \phi \cos^2 \phi + \frac{1}{r}\frac{\partial u_r}{\partial r} v_r\sin^2 \phi \cos^2 \phi + \frac{1}{r^2} u_r v_r\cos^4\phi\right) + \right. \\  \left. 4 \left( \frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r}\cos^2\phi\sin^2\phi - \frac{1}{r}u_r\frac{\partial v_r}{\partial r} \cos^2\phi\sin^2\phi - \frac{1}{r} \frac{\partial u_r}{\partial r} v_r \cos^2\phi\sin^2\phi + \frac{1}{r^2}u_r v_r \cos^2\phi\sin^2\phi\right)\right. + \\  \left. \left(\frac{\partial u_r}{\partial z}\frac{\partial v_r}{\partial z} + \frac{\partial u_z}{\partial r}\frac{\partial v_r}{\partial z}\right)\right]  - \int_{\Gamma_2} g_r v_r r= \lambda _u \int_{\Omega}u_r\ v_r r 
+\end{eqnarray*} \\
+Ceci peut être simplifié à : \\
+$$\int_{\Omega} r \lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) (\frac{\partial v_r}{\partial r} + \frac{1}{r} v_r) + \int_{\Omega} r \mu \left[ 2 \left(\frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r} + \frac{1}{r^2} u_r v_r\right) +  \left(\frac{\partial u_r}{\partial z}\frac{\partial v_r}{\partial z} + \frac{\partial u_z}{\partial r}\frac{\partial v_r}{\partial z}\right)\right]$$ \\
+$$ - \int_{\Gamma_2} g_r v_r r =\lambda _u \int_{\Omega}u_r\ v_r r $$ \\
+En fin, dans la troisième équation: \\
+
+\begin{eqnarray*} 
+ \int_{\Omega} r \mu \left(\frac{\partial u_r}{\partial z}\cos\phi + \frac{\partial u_z}{\partial r}\cos\phi\right)\frac{\partial v_z}{\partial r}\cos\phi + r \mu \left(\frac{\partial u_r}{\partial z}\sin\phi + \frac{\partial u_z}{\partial r}\sin\phi\right)\frac{\partial v_z}{\partial r}\sin\phi  + \\
+ r \left[\lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z} ) + 2 \mu \frac{\partial u_z}{\partial z}\right] \frac{\partial v_z}{\partial z} - \int_{\Gamma_2} g_z v_z  r =\lambda _u \int_{\Omega}u_z\ v_z r. \\
+\end{eqnarray*}
+ Cela nous donne: \\
+\begin{eqnarray*}
+ \int_{\Omega} r \mu \left(\frac{\partial u_r}{\partial z}\frac{\partial v_z}{\partial r} + \frac{\partial u_z}{\partial r}\frac{\partial v_z}{\partial r} + 2 \frac{\partial u_z}{\partial z} \frac{\partial v_z}{\partial z}\right) +  r \lambda \left(\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z} \right)\frac{\partial v_z}{\partial z} - \int_{\Gamma_2} g_z v_z  r =\lambda _u \int_{\Omega}u_z\ v_z r.
+\end{eqnarray*} \\
+
+Etant donné que les intégrands ne dépendent pas de $\Phi$, on peut simplifier cette intégrale par une restriction sur un sous domaine  $\Omega_0$ tel que : \\
+$\Omega_0 = \Omega \cap $ \{\ le demi plan ${x_1}^{+} x_3$\}\ \\
+ce qui se traduit par une divistion par 2$\pi$ : \\
+Ainsi la formulation variationelle est donnée par les équations suivantes: \\
+
+$$ \int_{\Omega_0} r \lambda (\frac{\partial u_r}{\partial r} + \frac{1}{r} u_r + \frac{\partial u_z}{\partial z}) (\frac{\partial v_r}{\partial r} + \frac{1}{r} v_r) + r \mu \left[ 2 \left(\frac{\partial u_r}{\partial r}\frac{\partial v_r}{\partial r} + \frac{1}{r^2} u_r v_r\right) +  \left(\frac{\partial u_r}{\partial z}\frac{\partial v_r}{\partial z} + \frac{\partial u_z}{\partial r}\frac{\partial v_r}{\partial z}\right)\right] $$
+$$- \int_{\Gamma_2} g_r v_r r =\lambda _u \int_{\Omega_0}u_r\ v_r r $$
+
+
+
+
+$$\int_{\Omega_0} r \mu (\frac{\partial u_{r}}{\partial z}\frac{\partial v_{z}}{\partial r} + \frac{\partial u_{z}}{\partial r}\frac{\partial v_{z}}{\partial r} + 2 
+\frac{\partial u_{z}}{\partial z}\frac{\partial v_{z}}{\partial z}) +
+r\mu(\frac{\partial u_{r}}{\partial r}+ \frac{1}{r} u_{r} + \frac{\partial u_{z}}{\partial z}) \frac{\partial v_{z}}{\partial z}
+-\int_{\Gamma_{2}} g_{z}v_{z}r  
+=\lambda _u \int_{\Omega_0} u_{z}v_{z}r$$
+
+\section{Etude de la convergence:}
+%D'après l'equation :
+%
+%\begin{equation}
+%\label{modeleS}
+%(\lambda+\mu) \textbf{grad} \  div \ \textbf{u} +\mu \Delta \textbf{u} +\textbf{F}=0
+%\end{equation} 
+%On a 
+%\begin{equation}
+%\label{modeleS}
+% -\textbf{F}= (\lambda+\mu) \textbf{grad} \  div \ \textbf{u} +\mu \Delta \textbf{u}
+%\end{equation}
+%
+%ainsi pour étudier la convergence au sens $L^{2}$ et $H{1}$, On se donne une solution exacte simple:
+%
+%  $$ \left\{\begin{array}{ll}
+%                  u_r = sin(\pi r) sin(\pi z)\\ 
+%                  u_z = 10 sin(\pi r) sin(\pi z)
+%                     \end{array}\right.$$ 
+%                       
+% On calcule les composantes $F_r$ et $F_z$ à l'aide de l'équation (8):\\
+% 
+%    
+%$ F_r = -(\lambda +\mu) (\frac{\pi \cos\left(\pi u\right) \sin\left(\pi v\right)}{u}-\frac{\sin\left(\pi u\right) \sin\left(\pi v\right)}{u^{2}}-\pi ^{2} \sin\left(\pi u\right) \sin\left(\pi v\right)+10 \pi ^{2} \cos\left(\pi u\right) \cos\left(\pi v\right))-\mu ((-\left(\pi ^{2}\right)) \sin\left(\pi u\right) \sin\left(\pi v\right)-\pi ^{2} \sin\left(\pi u\right) \sin\left(\pi v\right)+\frac{\pi \cos\left(\pi u\right) \sin\left(\pi v\right)}{u}-\frac{\sin\left(\pi u\right) \sin\left(\pi v\right)}{u^{2}})  $ \\ 
+%                  
+%                  
+%$ F_z = -(\lambda +\mu) (\frac{\pi \sin\left(\pi u\right) \cos\left(\pi v\right)}{u}+\pi ^{2} \cos\left(\pi u\right) \cos\left(\pi v\right)-10 \pi ^{2} \sin\left(\pi u\right) \sin\left(\pi v\right))-\mu ((-\left(10 \pi ^{2}\right)) \sin\left(\pi u\right) \sin\left(\pi v\right)-10 \pi ^{2} \sin\left(\pi u\right) \sin\left(\pi v\right)+\frac{10 \pi \cos\left(\pi u\right) \sin\left(\pi v\right)}{u})  $ \\
+%
+%                    % \end{array}\right.$$ 
+%On injecte ces composantes dans les équations de base, et on les implémentes afin de calculer la solution numérique associée, dans une géomètrie régulière (un rectangle [1,3] $\times$ [3,10] par exemple). On fait varier le pas de discréitisation h, et on observe les erreurs $L^{2}$ et $H{1}$\\
+%
+%\begin{center}
+%  \begin{tabular}{l || c  r }
+%  \hline
+%\ $h$   &     $ ||.||_{L^2} $&        $ ||.||_{H^1} $ \\   \hline
+%0.1   &   0.597822            &         0        \\
+%0.05   &   0.150896            &         0     \\
+%0.025 &   0.0377965            &         0     \\
+%0.0125 &   0.00938743           &         0    \\
+%\hline
+%\hline\multicolumn{2}{c}{Table de convergence pour p=1} \\
+%  \end{tabular} 
+%\end{center}
+%
+%\begin{center}
+% \begin{tikzpicture}
+%  \begin{loglogaxis}[ xlabel= h, ylabel=$||.||$] 
+%\addplot[color=red,mark=x] coordinates {
+%(0.1  ,  0.597822  ) 
+%(0.05  ,   0.150896)      
+%(0.025  , 0.0377965 )   
+%(0.0125  ,  0.00938743 )     };
+%\addlegendentry{$\Arrowvert . \Arrowvert_{L^2}$}
+%\addlegendentry{$\Arrowvert . \Arrowvert_{H^1}$}
+%\addplot[color=blue,mark=x] coordinates {
+%(0.1  , 0)      
+%(0.05  ,   0 )   
+%(0.025  ,  0 )    
+%(0.0125  ,  0 ) };   
+%
+%
+%  \end{loglogaxis}
+% \end{tikzpicture}  
+%% \underline{\texit{Figure : comportement de l'erreur en fonction de la finesse du maillage}} 
+%\end{center}
+%
+%%%%%%%%%%%%%%%%%%%%%%        %%%%%%%%%%%%%%%%%%%
+%
+%\section{Conclusion}
+%Dans le cadre de ce projet, on a implémenté le modèle de l'élasticité linéaire.
+%Mais il nous reste la comparaison avec les résultats des étudiants de Paris.
+%Par la suite on aimerait implémenter les cas non linéaires et non stationnaires.
+%
+%
+% 
+
+\end{document}
